@@ -1,8 +1,8 @@
 use axum::{
-    http::StatusCode, routing::post, Json, Router
+    extract::State, http::StatusCode, routing::post, Json, Router
 };
 
-use std::sync::Arc;
+use std::{sync::Arc, thread::sleep, time::Duration};
 use serde::Deserialize;
 use tokio::sync::Semaphore;
 
@@ -30,10 +30,25 @@ struct AppState {
 }
 
 #[axum::debug_handler]
-async fn webhook_handler(Json(payload): Json<GiteaWebhook>) -> StatusCode { 
-    println!("Repository: {}, Commit: {}", payload.repository.ssh_url, payload.after);
+async fn webhook_handler(
+    State(state): State<AppState>,
+    Json(payload): Json<GiteaWebhook>,
+    ) -> StatusCode { 
+    let git_repo_url = payload.repository.ssh_url.clone();
+    let current_git_commit = payload.after.clone();
 
-    StatusCode::OK
+    let permit = match state.main_semaphore.try_acquire_owned() {
+        Ok(permit) => permit,
+        Err(_) => return StatusCode::TOO_MANY_REQUESTS,
+    };
+
+    tokio::spawn(async move {
+        println!("Pipeline started for repo: {}, commit: {}", git_repo_url, current_git_commit);
+        tokio::time::sleep(Duration::from_secs(10)).await;
+        println!("Pipeline finished for repo: {}, commit: {}", git_repo_url, current_git_commit);
+        drop(permit);
+    });
+    StatusCode::OK  
 }
 
 #[tokio::main]
