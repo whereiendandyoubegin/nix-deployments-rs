@@ -18,7 +18,7 @@ pub enum AppError {
 
 pub type Result<T> = std::result::Result<T, AppError>; 
 
-#[derive(Debug, Clone, serde::Deserialize)]
+#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub struct VMConfig {
     pub name: String,
     pub vm_id: u32,
@@ -31,13 +31,13 @@ pub struct VMConfig {
     pub cloud_init: CloudInit,
 }
 
-#[derive(Debug, Clone, serde::Deserialize)]
+#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub enum CloudInit {
     None,
     StorageReference(String),
 }
 
-#[derive(Debug, Clone, serde::Deserialize)]
+#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub struct DeployedVM {
     pub vm_id: u32,
     pub vm_name: String,
@@ -45,12 +45,12 @@ pub struct DeployedVM {
     pub commit_hash: String,
 }
 
-#[derive(Debug, Clone, serde::Deserialize)]
+#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub struct DesiredState {
     pub vms: HashMap<String, VMConfig>
 }
 
-#[derive(Debug, Clone, serde::Deserialize)]
+#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
 pub struct DeployedState {
     pub vms: HashMap<String, DeployedVM>
 }
