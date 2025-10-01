@@ -7,6 +7,7 @@ use serde::Deserialize;
 use tokio::sync::Semaphore;
 
 mod build;
+mod types;
 
 #[derive(Deserialize)]
 struct Response  {
