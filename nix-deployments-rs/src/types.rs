@@ -9,8 +9,8 @@ enum AppError {
     #[error("QM error: {0}")]
     QMError(String),
     #[error("File IO error {0}")]
-    FileIOError(String),
+    FileIOError(#[from] std::io::Error),
     #[error("Serialisation error at some point {0}")]
-    SerialisationError(String),    
+    SerialisationError(String), 
 }
 
