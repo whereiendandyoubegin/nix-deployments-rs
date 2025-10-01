@@ -10,7 +10,7 @@ mod build;
 mod types;
 
 #[derive(Deserialize)]
-struct Response  {
+struct Response {
     response: String
 }
 
