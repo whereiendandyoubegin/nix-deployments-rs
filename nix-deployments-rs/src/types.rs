@@ -45,12 +45,12 @@ pub struct DeployedVM {
     pub commit_hash: String,
 }
 
-#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
+#[derive(Debug, Clone, serde::Deserialize)]
 pub struct DesiredState {
     pub vms: HashMap<String, VMConfig>
 }
 
-#[derive(Debug, Clone, serde::Deserialize, serde::Serialize)]
+#[derive(Debug, Clone, serde::Deserialize)]
 pub struct DeployedState {
     pub vms: HashMap<String, DeployedVM>
 }
